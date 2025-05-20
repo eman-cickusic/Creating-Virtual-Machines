@@ -1,0 +1,29 @@
+output "utility_vm_name" {
+  description = "The name of the utility VM"
+  value       = google_compute_instance.utility_vm.name
+}
+
+output "utility_vm_zone" {
+  description = "The zone of the utility VM"
+  value       = google_compute_instance.utility_vm.zone
+}
+
+output "windows_vm_name" {
+  description = "The name of the Windows VM"
+  value       = google_compute_instance.windows_vm.name
+}
+
+output "windows_vm_external_ip" {
+  description = "The external IP of the Windows VM"
+  value       = google_compute_instance.windows_vm.network_interface[0].access_config[0].nat_ip
+}
+
+output "custom_vm_name" {
+  description = "The name of the custom VM"
+  value       = google_compute_instance.custom_vm.name
+}
+
+output "custom_vm_machine_type" {
+  description = "The machine type of the custom VM"
+  value       = google_compute_instance.custom_vm.machine_type
+}

@@ -1,0 +1,112 @@
+# Terraform configuration to create the VMs described in the lab
+
+provider "google" {
+  project = var.project_id
+  region  = var.region
+}
+
+# Task 1: Create a utility virtual machine
+resource "google_compute_instance" "utility_vm" {
+  name         = "utility-vm"
+  machine_type = "e2-medium"
+  zone         = "${var.region}-${var.zone_suffix}"
+
+  boot_disk {
+    initialize_params {
+      image = "debian-cloud/debian-12"
+    }
+  }
+
+  network_interface {
+    network = "default"
+    # No external IP address
+  }
+
+  metadata = {
+    enable-oslogin = "TRUE"
+  }
+
+  scheduling {
+    automatic_restart   = true
+    on_host_maintenance = "MIGRATE"
+  }
+}
+
+# Task 2: Create a Windows virtual machine
+resource "google_compute_instance" "windows_vm" {
+  name         = "windows-vm"
+  machine_type = "e2-standard-2"
+  zone         = "${var.region}-${var.zone_suffix}"
+
+  boot_disk {
+    initialize_params {
+      image = "windows-cloud/windows-2016-core"
+      size  = 64
+      type  = "pd-ssd"
+    }
+  }
+
+  network_interface {
+    network = "default"
+    access_config {
+      // Ephemeral IP
+    }
+  }
+
+  tags = ["http-server", "https-server"]
+
+  metadata = {
+    enable-oslogin = "TRUE"
+  }
+}
+
+# Firewall rules for Windows VM
+resource "google_compute_firewall" "allow_http" {
+  name    = "allow-http"
+  network = "default"
+
+  allow {
+    protocol = "tcp"
+    ports    = ["80"]
+  }
+
+  source_ranges = ["0.0.0.0/0"]
+  target_tags   = ["http-server"]
+}
+
+resource "google_compute_firewall" "allow_https" {
+  name    = "allow-https"
+  network = "default"
+
+  allow {
+    protocol = "tcp"
+    ports    = ["443"]
+  }
+
+  source_ranges = ["0.0.0.0/0"]
+  target_tags   = ["https-server"]
+}
+
+# Task 3: Create a custom virtual machine
+resource "google_compute_instance" "custom_vm" {
+  name         = "custom-vm"
+  machine_type = "custom-2-4096"
+  zone         = "${var.region}-${var.zone_suffix}"
+
+  boot_disk {
+    initialize_params {
+      image = "debian-cloud/debian-12"
+    }
+  }
+
+  network_interface {
+    network = "default"
+    access_config {
+      // Ephemeral IP
+    }
+  }
+
+  metadata = {
+    enable-oslogin = "TRUE"
+  }
+}
