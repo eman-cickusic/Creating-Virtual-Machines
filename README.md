@@ -1,6 +1,11 @@
-# Google Cloud Virtual Machines Lab
+# Creating Virtual Machines
 
 This repository documents the steps to create and explore different types of virtual machines (VMs) in Google Cloud Platform. This lab covers creating standard VMs, Windows VMs, and custom VMs, and explores various VM options and configurations.
+
+## Video
+
+https://youtu.be/uL7kHGomDRY
+
 
 ## Table of Contents
 - [Overview](#overview)
